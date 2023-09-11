@@ -10,6 +10,7 @@ public:
 	double speed_;
 	Vec2 dir_;
 	Texture tex_;
+	bool isMaxSpeed;//100m/s到達
 	void Update();
 	void Draw();
 };

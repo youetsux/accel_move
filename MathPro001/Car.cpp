@@ -1,14 +1,19 @@
 ﻿#include "stdafx.h"
 #include "Car.h"
+const float GRAV{ 1.0 };
+const float FRICTIONTERM{ 0.985 };
+const float MAX_SPEED{ 100 };//m/s 1pixel=1m
+
 
 Car::Car()
 {
-	pos_ = { Scene::Width()-50, GROUND_HIGHT-25};
-	speed_ = 0.0; // 初速0 m/s
-	accel_ = 30.0;
+	pos_ = { Scene::Width()-50, GROUND_HIGHT - 50 / 2 + 9 };
+	speed_ = { 0.0,0.0 }; // 初速0 m/s
+	accel_ = { -30.0, 0.0 };
 	dir_ = { -1.0, 0 };
 	tex_ = TextureAsset(U"CAR");
-	isMaxSpeed = false;
+	isMaxSpeed_ = false;
+	isJump = false;
 }
 
 Car::~Car()
@@ -22,27 +27,40 @@ void Car::Update()
 {
 	if (KeySpace.pressed())
 	{
-		if(speed_ <= 100)
-			speed_ = speed_ + accel_ * Scene::DeltaTime();
+		if(speed_.x <= 100)
+			speed_.x = speed_.x + accel_.x * Scene::DeltaTime();
 	}else
-		speed_ = speed_ * 0.985;
+		speed_.x = speed_.x * FRICTIONTERM;
 
-	pos_ = pos_ + speed_ * dir_ * Scene::DeltaTime();
-	if (KeyV.pressed())
+	//pos_ = pos_ + speed_.x * dir_ * Scene::DeltaTime();
+	if (KeyV.down())
 	{
-		pos_.y = pos_.y - 1;
+		if (isJump == false)
+		{
+			isJump = true;
+			accel_.y = 1.0;
+			speed_.y = -200;
+		}
 	}
 	else
 	{
-		if(pos_.y < GROUND_HIGHT-50/2+10)
-			pos_.y = pos_.y + 1;
-	}
 
+		if(pos_.y < GROUND_HIGHT-50/2+10)
+		{
+			pos_.y = GROUND_HIGHT - 50 / 2 + 10;
+			isJump = false;
+		}
+		else
+		{
+			speed_.y = speed_.y + accel_.y * Scene::DeltaTime();
+		}
+	}
+	pos_ = pos_ + speed_ * Scene::DeltaTime();
 }
 
 void Car::Draw()
 {
 	tex_.resized(50).drawAt(pos_);
-	String strSPD = ToString((int)speed_);
+	String strSPD = ToString(-(int)speed_.x);
 	FontAsset(U"FONT")(strSPD + U" m/s").drawAt(pos_.x, pos_.y + 48);
 }

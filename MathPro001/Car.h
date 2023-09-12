@@ -1,4 +1,8 @@
 ﻿#pragma once
+
+const int GROUND_HIGHT{ 470 };
+
+
 class Car
 {
 	//コーディング規約

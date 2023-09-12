@@ -16,7 +16,8 @@ void Main()
 
 	while (System::Update())
 	{
-		Rect{ {0, 470},Scene::Width(), Scene::Height() - 470 }.draw(Palette::Firebrick);
+		Rect{ {0, GROUND_HIGHT},Scene::Width(), Scene::Height() - GROUND_HIGHT }
+		.draw(Palette::Firebrick);
 		mycar.Update();
 		mycar.Draw();
 	

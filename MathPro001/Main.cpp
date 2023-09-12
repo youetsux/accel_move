@@ -13,7 +13,7 @@ void Main()
 	TextureAsset::Register(U"CAR", U"🚜"_emoji);
 
 	Car mycar;
-
+	
 	while (System::Update())
 	{
 		Rect{ {0, GROUND_HIGHT},Scene::Width(), Scene::Height() - GROUND_HIGHT }

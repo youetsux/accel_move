@@ -9,7 +9,7 @@ Car::Car()
 {
 	pos_ = { Scene::Width()-50, GROUND_HIGHT - 50 / 2 + 9 };
 	speed_ = { 0.0,0.0 }; // 初速0 m/s
-	accel_ = { -30.0, 0.0 };
+	accel_ = { -100.0, 0.0 };
 	dir_ = { -1.0, 0 };
 	tex_ = TextureAsset(U"CAR");
 	isMaxSpeed_ = false;
@@ -30,7 +30,7 @@ void Car::Update()
 		if(speed_.x <= 100)
 			speed_.x = speed_.x + accel_.x * Scene::DeltaTime();
 	}else
-		speed_.x = speed_.x * FRICTIONTERM;
+		speed_.x = speed_.x - speed_.x * FRICTIONTERM * Scene::DeltaTime();
 
 	//pos_ = pos_ + speed_.x * dir_ * Scene::DeltaTime();
 	if (KeyV.down())
@@ -38,22 +38,22 @@ void Car::Update()
 		if (isJump == false)
 		{
 			isJump = true;
-			accel_.y = 1.0;
-			speed_.y = -200;
+			accel_.y = 360.0;
+			speed_.y = -180;
 		}
 	}
 	else
 	{
 
-		if(pos_.y < GROUND_HIGHT-50/2+10)
+		if(isJump && pos_.y > GROUND_HIGHT-50/2+10)
 		{
 			pos_.y = GROUND_HIGHT - 50 / 2 + 10;
+			speed_.y = 0;
+			accel_.y = 0;
 			isJump = false;
 		}
-		else
-		{
-			speed_.y = speed_.y + accel_.y * Scene::DeltaTime();
-		}
+		
+		speed_.y = speed_.y + accel_.y * Scene::DeltaTime();
 	}
 	pos_ = pos_ + speed_ * Scene::DeltaTime();
 }
